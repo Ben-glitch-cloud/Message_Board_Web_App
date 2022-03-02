@@ -24,6 +24,11 @@ app.post('/newMessage', async function(req, res){
 app.post('/deleteMessage', async function(req, res) {
   await messageBordExpress.DeleteMesage(req.body['id'])
   res.send('--Success Message has been delete--')
+}) 
+
+app.post('/EditMessage', async function(req, res) {
+  await messageBordExpress.EditMessage(req.body)
+  res.send('--Message has been delete--')
 })
 
 app.listen(port, () => {

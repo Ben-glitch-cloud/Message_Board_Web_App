@@ -47,6 +47,18 @@ class MessageBord {
         }finally{
             await client.close()
         }
+    } 
+
+    async EditMessage(IDAndMessage){
+        try{
+            await client.connect() 
+            await client.db('UserMessages').collection('Messages').updateOne({"_id": ObjectId(IDAndMessage['ID'])}, {$set: { UserMessage: IDAndMessage['UserMessage'] }}) 
+            return true
+        }catch(e){
+            console.log(`Error: ${e}`)
+        }finally{
+            await client.close()
+        }
     }
 } 
 

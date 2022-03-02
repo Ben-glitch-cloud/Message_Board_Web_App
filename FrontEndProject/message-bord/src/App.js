@@ -12,17 +12,19 @@ function App() {
 
   const [editWindow, setEditWindow] = useState(false)  
 
-  const [editMessage, setEditMesage] = useState([])
+  const [editMessage, setEditMesage] = useState([]) 
+
+  const [login, setLogin] = useState(true)
   
-  useEffect(() => {
+  useEffect(() => { 
+
     axios.get('/messages').then((res) => { 
       setMessages(messages => [...messages, ...res.data]) 
     }).catch(function (error){
       console.log(`Error: ${error}`)
-    })
-  }, [])  
+    }) 
 
-  console.log('looking at chest')
+  }, [])  
 
   function GetMessageData(e){ 
     setMessages(messages => [...messages, e]) 
@@ -46,34 +48,55 @@ function App() {
   function GetEditMessage(ID, message){
     console.log('edit', ID, message) 
     setEditWindow(editWindow => !editWindow) 
-    setEditMesage(editMessage => [...editMessage, {_id: ID, UserMessage: message}])
+    setEditMesage(editMessage => [...editMessage, {_id: ID, UserMessage: message}]) 
   } 
 
   function GetCloseEditWindow(){
     setEditWindow(editWindow => !editWindow) 
     setEditMesage([])
-  }
+  } 
 
-  // make sure username and password are in a .env file before pushing to github:)
+  function ChangeEditMessage(EditedM){ 
+    setEditWindow(editWindow => !editWindow) 
+    setEditMesage([])    
+    setMessages(message => message.filter((mes) => mes['_id'] === EditedM['ID'] ? mes['UserMessage'] = EditedM['UserMessage'] : mes))
+    axios.post('/EditMessage', {
+      ID: EditedM['ID'], 
+      UserMessage: EditedM['UserMessage']
+    }).catch(function (error){
+      console.log(`Error: ${error}`)
+    }) 
+    console.log(EditedM)
+  } 
 
-  // As a user I would like to edit my messages ones they are up.    
+  // 1. Creat a login page 
 
-  //Creat the editing form. 
+  // 2. Creat a database with a collaction of usernames and passwords (add a User statuse to the app)
+  
+  // 3. Start looking at online deplayment
 
-  //ones a user has edited the message send it to the database to be fixed.
-
+  if(login) {
   return ( 
-    <div className="App">
+    <div className="App">  
       <Header/>  
-      { editWindow ? <EditWindow SetEditMessage={editMessage} GetCloseEditWindow={GetCloseEditWindow}/> : null }
+      { editWindow ? <EditWindow SetEditMessage={editMessage} GetCloseEditWindow={GetCloseEditWindow} ChangeEditMessage={ChangeEditMessage}/> : null }
       <Form GetMessageData={GetMessageData}/>
       <div className='MessageCon'>
         {messages.map(item => {
           return <UserMessage id={item._id} message={item.UserMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage}/>
         })}
-      </div>
+      </div>  
     </div>
-  );
+  ); 
+  } else {
+  return(
+        <div>
+          <p>Hello world</p>
+        </div>
+        )
+  }
+
+
 }
 
 export default App;
