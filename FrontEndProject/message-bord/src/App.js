@@ -4,7 +4,8 @@ import axios from 'axios';
 import UserMessage from './components/UserMessages/UserMessages'; 
 import Header from './components/Header/Header' 
 import Form from './components/Form/Form' 
-import EditWindow from './components/EditWindow/EditWindow';
+import EditWindow from './components/EditWindow/EditWindow'; 
+import Login from './components/Login/Login'
 
 function App() {  
 
@@ -14,17 +15,18 @@ function App() {
 
   const [editMessage, setEditMesage] = useState([]) 
 
-  const [login, setLogin] = useState(true)
+  const [login, setLogin] = useState(false)
   
   useEffect(() => { 
-
-    axios.get('/messages').then((res) => { 
-      setMessages(messages => [...messages, ...res.data]) 
-    }).catch(function (error){
-      console.log(`Error: ${error}`)
-    }) 
-
-  }, [])  
+    if(login) { 
+      console.log('--Getting messages--')
+      axios.get('/messages').then((res) => { 
+        setMessages(messages => [...messages, ...res.data]) 
+      }).catch(function (error){
+        console.log(`Error: ${error}`)
+      })  
+    } 
+  }, [login])  
 
   function GetMessageData(e){ 
     setMessages(messages => [...messages, e]) 
@@ -69,11 +71,16 @@ function App() {
     console.log(EditedM)
   } 
 
-  // 1. Creat a login page 
+  function GetMessageBord(){ setLogin(login => !login) }
 
-  // 2. Creat a database with a collaction of usernames and passwords (add a User statuse to the app)
-  
-  // 3. Start looking at online deplayment
+
+  // Add the User id to the messages, so a user can only delete there messages. 
+
+  // Add a User Vaule, so the head of the page can delete messages. 
+
+  // Add a message if the user password is incorrect.  
+
+  // Make sure when A user refreshes the page they dont log out
 
   if(login) {
   return ( 
@@ -90,9 +97,7 @@ function App() {
   ); 
   } else {
   return(
-        <div>
-          <p>Hello world</p>
-        </div>
+        <Login GetMessageBord={GetMessageBord}/>
         )
   }
 

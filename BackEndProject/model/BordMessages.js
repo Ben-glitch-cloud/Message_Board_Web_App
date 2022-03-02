@@ -60,6 +60,20 @@ class MessageBord {
             await client.close()
         }
     }
-} 
+}  
 
-module.exports = MessageBord
+class UserAccounts{
+    async VerifyDetails(UserName, Password) {
+        try{
+            await client.connect() 
+            const result = await client.db('UserProfiles').collection('AccountDetails').findOne({"UserName": UserName, "Password": Password}) 
+            return result
+        }catch(error){
+            console.log(`Error ${error}`)
+        }finally{
+            await client.close()
+        }
+    }
+}
+
+module.exports = {MessageBord: MessageBord, UserAccounts: UserAccounts}
