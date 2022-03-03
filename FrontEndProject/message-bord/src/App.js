@@ -15,18 +15,29 @@ function App() {
 
   const [editMessage, setEditMesage] = useState([]) 
 
-  const [login, setLogin] = useState(false)
+  const [login, setLogin] = useState(false) 
+
+  const [userID, setUserID] = useState([])
   
   useEffect(() => { 
     if(login) { 
-      console.log('--Getting messages--')
+      console.log('--Getting messages--') 
+      setMessages(messages => messages = []) 
+      setUserID(userID => userID = [])
       axios.get('/messages').then((res) => { 
         setMessages(messages => [...messages, ...res.data]) 
       }).catch(function (error){
         console.log(`Error: ${error}`)
-      })  
+      })   
+
+      axios.get('/UserConfirmation').then((res) => {  
+        console.log(res.data['_id'])
+        setUserID(userID => [...userID, res.data['_id']])   
+      }).catch(function (error) {
+        console.log(`Error: ${error}`)
+      })
     } 
-  }, [login])  
+  }, [login])   
 
   function GetMessageData(e){ 
     setMessages(messages => [...messages, e]) 
@@ -71,12 +82,12 @@ function App() {
     console.log(EditedM)
   } 
 
-  function GetMessageBord(){ setLogin(login => !login) }
+  function GetMessageBord(){ setLogin(login => !login) } 
 
+  function logout(){  
+    setLogin(login => !login)  
+  }
 
-  // Add the User id to the messages, so a user can only delete there messages. 
-
-  // Add a User Vaule, so the head of the page can delete messages. 
 
   // Add a message if the user password is incorrect.  
 
@@ -85,12 +96,12 @@ function App() {
   if(login) {
   return ( 
     <div className="App">  
-      <Header/>  
+      <Header LoggingOut={logout}/>  
       { editWindow ? <EditWindow SetEditMessage={editMessage} GetCloseEditWindow={GetCloseEditWindow} ChangeEditMessage={ChangeEditMessage}/> : null }
-      <Form GetMessageData={GetMessageData}/>
+      <Form GetMessageData={GetMessageData} CurrentUserID={userID[0]}/>
       <div className='MessageCon'>
         {messages.map(item => {
-          return <UserMessage id={item._id} message={item.UserMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage}/>
+          return <UserMessage id={item._id} message={item.UserMessage} MessageID={item.UserIDMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage} CurrentUserID={userID[0]}/>
         })}
       </div>  
     </div>
@@ -100,8 +111,6 @@ function App() {
         <Login GetMessageBord={GetMessageBord}/>
         )
   }
-
-
 }
 
 export default App;

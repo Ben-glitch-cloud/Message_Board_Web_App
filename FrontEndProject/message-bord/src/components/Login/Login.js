@@ -13,7 +13,8 @@ function Login(props){
             }
         }).then((res) => { 
             if(res['data']){
-                GetMessageBord()
+                GetMessageBord() 
+                // get ID from here
             } else {
                 console.log('No username or password found')
             }

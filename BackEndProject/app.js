@@ -11,15 +11,23 @@ const MessageBordClasses = require('./model/BordMessages')
 
 const messageBordExpress = new MessageBordClasses['MessageBord'] 
 
-const messageBordedUserProfile = new MessageBordClasses['UserAccounts']
+const messageBordedUserProfile = new MessageBordClasses['UserAccounts'] 
+
+const UserID = {};
 
 app.get('/messages', async function (req, res) {  
   const messages = await messageBordExpress.HoldingMessages() 
   res.send(messages) 
-}) 
+})  
 
-app.post('/newMessage', async function(req, res){ 
-  await messageBordExpress.addNewMessage(req.body)
+app.get('/UserConfirmation', async function(req, res) {    
+  Object.keys(UserID).length !== 0 ? res.send(UserID) : null
+})
+
+app.post('/newMessage', async function(req, res){  
+  let messageInfo = req.body   
+  messageInfo['UserIDMessage'] = UserID['_id'].toString() 
+  await messageBordExpress.addNewMessage(messageInfo)  
   res.send('--Success Message has been stored--')
 }) 
 
@@ -38,8 +46,13 @@ app.listen(port, () => {
 }) 
 
 app.get('/CheckUserDetails', async function(req, res) {
-  const result = await messageBordedUserProfile.VerifyDetails(req.query.UserName, req.query.Password) 
-  const Verify = result['UserName'] === req.query.UserName && result['Password'] === req.query.Password
-  res.send(Verify)
+  const result = await messageBordedUserProfile.VerifyDetails(req.query.UserName, req.query.Password)   
+  if(result !== null){  
+    UserID['_id'] = result['_id'].toString()   
+    const Verify = result['UserName'] === req.query.UserName && result['Password'] === req.query.Password 
+    res.send(Verify) 
+  } else {
+    res.send(false)
+  }
 })
 

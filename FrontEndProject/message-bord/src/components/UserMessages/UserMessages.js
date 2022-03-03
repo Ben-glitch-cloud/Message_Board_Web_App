@@ -4,18 +4,17 @@ function UserMessage(props){
 
     function DeleteMessage(ID){ props.GetMessageID(ID) } 
 
-    function EditMessage(ID, message){ 
-        props.GetEditMessage(ID, message)
-    }
-
+    function EditMessage(ID, message){ props.GetEditMessage(ID, message) }  
 
     return(
         <div className="UserMessage">
             <p>{props.message}</p>
-            <p>{props.date}</p> 
-            <button className='delete' onClick={() => DeleteMessage(props.id)}>Delete</button> 
-            <br/>
-            <button className='edit' onClick={() => EditMessage(props.id, props.message)}>Edit</button>
+            <p>{props.date}</p>  
+            <div className='buttonArea'>
+                { props.MessageID === props.CurrentUserID ? <button className='delete' onClick={() => DeleteMessage(props.id)}>Delete</button> : null }
+                <br/>
+                { props.MessageID === props.CurrentUserID ? <button className='edit' onClick={() => EditMessage(props.id, props.message)}>Edit</button> : null}
+            </div>
         </div>
     )
 } 

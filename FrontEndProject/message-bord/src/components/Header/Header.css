@@ -1,12 +1,29 @@
 .Header{
     width: 100%; 
-    margin: 15px 0px; 
-    text-align: center;
+    height: 70px;
+    display: flex;
+    justify-content: space-between; 
+    background-color: deepskyblue; 
+    align-items: center;
 } 
 
-.Header p{
-    font-size: 30px; 
-    font-family: Arial, Helvetica, sans-serif; 
-    margin: 0px;
-    padding: 0px;
+.HeaderItem{
+    font-size: 28px; 
+    margin-left: 40px; 
+    color: white;
+} 
+
+.LogoutItem button{
+    padding: 7.5px;
+    border-radius: 5px; 
+    border: solid 2px deepskyblue;
+    background-color: white; 
+    color: deepskyblue; 
+    font-size: 18px; 
+    margin-right: 40px;
+} 
+
+.LogoutItem button:hover{
+    background-color: orange;
+    color: white;
 }

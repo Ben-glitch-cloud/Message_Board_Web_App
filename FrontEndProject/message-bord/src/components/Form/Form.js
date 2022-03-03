@@ -12,8 +12,9 @@ function Form(props){
     function MessageStateChange(e){ setMessageState(e.target.value)}
 
     function GetPostMessage(e){
-        e.preventDefault() 
-        const NewMessageObject = {_id: IdNumber, UserMessage: messageState, Date: GetDate()} 
+        e.preventDefault()   
+        if(messageState.trim().length === 0){ return }
+        const NewMessageObject = {_id: IdNumber, UserMessage: messageState, Date: GetDate(), UserIDMessage: props.CurrentUserID} 
         IdNumber++ 
         props.GetMessageData(NewMessageObject) 
         setMessageState('')
