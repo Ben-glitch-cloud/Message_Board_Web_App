@@ -41,9 +41,7 @@ app.post('/EditMessage', async function(req, res) {
   res.send('--Message has been delete--')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-}) 
+
 
 app.get('/CheckUserDetails', async function(req, res) {
   const result = await messageBordedUserProfile.VerifyDetails(req.query.UserName, req.query.Password)   
@@ -56,3 +54,19 @@ app.get('/CheckUserDetails', async function(req, res) {
   }
 })
 
+app.post('/Creating/User', async function(req, res) {
+  // console.log(req.body['UserName'])  
+  // console.log(req.body['Password'])   
+  const result = await messageBordedUserProfile.CheckOtherUsersNamesEx(req.body['UserName']) 
+  if(result){ 
+    await messageBordedUserProfile.AddNewUser(req.body['UserName'], req.body['Password'])
+    res.send(true)
+  } else {
+    res.send(false)
+  }
+
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+}) 

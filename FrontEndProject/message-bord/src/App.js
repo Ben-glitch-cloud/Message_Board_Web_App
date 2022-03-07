@@ -5,7 +5,8 @@ import UserMessage from './components/UserMessages/UserMessages';
 import Header from './components/Header/Header' 
 import Form from './components/Form/Form' 
 import EditWindow from './components/EditWindow/EditWindow'; 
-import Login from './components/Login/Login'
+import Login from './components/Login/Login' 
+import Filter from './components/Filter/Filter';
 
 function App() {  
 
@@ -18,7 +19,7 @@ function App() {
   const [login, setLogin] = useState(false) 
 
   const [userID, setUserID] = useState([])
-  
+
   useEffect(() => { 
     if(login) { 
       console.log('--Getting messages--') 
@@ -37,7 +38,12 @@ function App() {
         console.log(`Error: ${error}`)
       })
     } 
-  }, [login])   
+  }, [login])    
+
+  useEffect(() => {
+    const LogedIn = localStorage.getItem('login') 
+   if(LogedIn){setLogin(login => !login)}
+  }, [])
 
   function GetMessageData(e){ 
     setMessages(messages => [...messages, e]) 
@@ -84,21 +90,17 @@ function App() {
 
   function GetMessageBord(){ setLogin(login => !login) } 
 
-  function logout(){  
-    setLogin(login => !login)  
-  }
-
-
-  // Add a message if the user password is incorrect.  
-
-  // Make sure when A user refreshes the page they dont log out
+  function logout(){ 
+    setLogin(login => !login) 
+    localStorage.removeItem('login')
+  } 
 
   if(login) {
   return ( 
     <div className="App">  
       <Header LoggingOut={logout}/>  
       { editWindow ? <EditWindow SetEditMessage={editMessage} GetCloseEditWindow={GetCloseEditWindow} ChangeEditMessage={ChangeEditMessage}/> : null }
-      <Form GetMessageData={GetMessageData} CurrentUserID={userID[0]}/>
+      <Form GetMessageData={GetMessageData} CurrentUserID={userID[0]}/>  
       <div className='MessageCon'>
         {messages.map(item => {
           return <UserMessage id={item._id} message={item.UserMessage} MessageID={item.UserIDMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage} CurrentUserID={userID[0]}/>

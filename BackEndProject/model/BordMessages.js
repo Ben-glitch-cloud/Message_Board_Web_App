@@ -21,7 +21,7 @@ class MessageBord {
         }catch(e){
             console.log(`Error Found: ${e}`)
         }finally{
-            await client.close();
+            client.close();
         }
     } 
 
@@ -33,7 +33,7 @@ class MessageBord {
         }catch(e){
             console.log(`Error: ${e}`)
         }finally{
-            await client.close();
+            client.close();
         }
     } 
 
@@ -45,7 +45,7 @@ class MessageBord {
         }catch(e){
             console.log(`Error: ${e}`)
         }finally{
-            await client.close()
+            client.close()
         }
     } 
 
@@ -57,7 +57,7 @@ class MessageBord {
         }catch(e){
             console.log(`Error: ${e}`)
         }finally{
-            await client.close()
+            client.close()
         }
     }
 }  
@@ -71,7 +71,31 @@ class UserAccounts{
         }catch(error){
             console.log(`Error ${error}`)
         }finally{
-            await client.close()
+            client.close()
+        }
+    } 
+
+    async CheckOtherUsersNamesEx(UserName){
+        try{ 
+            await client.connect()
+            const result = await client.db('UserProfiles').collection('AccountDetails').findOne({"UserName": UserName})  
+            return result === null ? true : false
+        }catch(error){
+            console.log(`Error: ${error}`)
+        }finally{
+            client.close()
+        }
+    } 
+
+    async AddNewUser(UserName, Password){
+        try{  
+            await client.connect()
+            const result = await client.db('UserProfiles').collection('AccountDetails').insertOne({UserName: UserName, Password: Password})  
+            return result['acknowledged']
+        }catch(error){
+            console.log(`Error: ${error}`)
+        }finally{
+            client.close()
         }
     }
 }
