@@ -37,18 +37,21 @@ app.post('/deleteMessage', async function(req, res) {
 }) 
 
 app.post('/EditMessage', async function(req, res) {
-  await messageBordExpress.EditMessage(req.body)
-  res.send('--Message has been delete--')
+  await messageBordExpress.EditMessage(req.body) 
+  console.log('the message has been edited')
+  res.send('--Message has been Edited--')
 })
 
 
+// checking user details --> look at saving user details. 
 
 app.get('/CheckUserDetails', async function(req, res) {
   const result = await messageBordedUserProfile.VerifyDetails(req.query.UserName, req.query.Password)   
   if(result !== null){  
     UserID['_id'] = result['_id'].toString()   
-    const Verify = result['UserName'] === req.query.UserName && result['Password'] === req.query.Password 
-    res.send(Verify) 
+    const Verify = result['UserName'] === req.query.UserName && result['Password'] === req.query.Password  
+    // console.log({VerifyUser: Verify, UserName: result['UserName']})
+    res.send({VerifyUser: Verify, UserName: result['UserName']}) 
   } else {
     res.send(false)
   }

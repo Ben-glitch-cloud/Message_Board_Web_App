@@ -11,7 +11,7 @@ function EditWindow(props){
 
     function EditMessage(e){ 
         setUserMessage(e.target.value)
-        setMessageEdited(message => !message)
+        setMessageEdited(message => message = true)
     } 
 
     function SubmitEditChange(e){  
@@ -19,10 +19,6 @@ function EditWindow(props){
         if(!messageEdited){ return }
         props.ChangeEditMessage({UserMessage: UserMessage, ID: ID})
     }
-
-    //Creat the editing form. 
-
-    //ones a user has edited the message send it to the database to be fixed.
 
     function CloseEditWindow(){ props.GetCloseEditWindow() }
     
@@ -36,7 +32,7 @@ function EditWindow(props){
         <div className='EditWindowConMessage'>
             <form onClick={SubmitEditChange}> 
                 <textarea type="text" value={UserMessage} onChange={EditMessage} rows="4" cols="40"/>
-                <input type="submit" value="Edit"/>
+                <input type="submit" value="Save Edit" disabled={!messageEdited}/>
             </form>
         </div>
         </div>

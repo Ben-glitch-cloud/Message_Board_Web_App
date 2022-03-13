@@ -14,6 +14,16 @@
     top: 0px; 
     right: 45px; 
     color: deepskyblue;
+} 
+
+.LoginHeaderLoginHeaderSignUp{
+    margin: 0px; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 26px; 
+    position: relative; 
+    top: 0px; 
+    right: 30px; 
+    color: teal;
 }
 
 .LoginFormCon{ 
@@ -109,8 +119,8 @@
     position: absolute; 
     top: 500px; 
     padding: 5px; 
-    background-color: teal; 
-    border: 2px solid teal; 
+    background-color: green; 
+    border: 2px solid green; 
     border-radius: 5px; 
     color: white; 
     font-size: 16px; 
@@ -119,5 +129,5 @@
 
 .CreateUser:hover{
     background-color: white; 
-    color: teal; 
+    color: green; 
 }

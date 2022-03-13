@@ -26,8 +26,9 @@ function Login(props){
                 UserName: UserDetails['UserName'], 
                 Password: UserDetails['Password']
             }
-        }).then((res) => {  
-            res['data'] ?  GetMessageBord() : setErrorMessage(errorMessage => errorMessage = 'User Name or Password is incorrect.')
+        }).then((res) => {   
+            console.log(res['data'])
+            res['data']['VerifyUser'] ?  GetMessageBord(res['data']['UserName']) : setErrorMessage(errorMessage => errorMessage = 'User Name or Password is incorrect.')
         }).catch((error) => {
             console.log(`Error: ${error}`)
         })
@@ -45,9 +46,9 @@ function Login(props){
         })
     }
 
-    function GetMessageBord(){  
-        props.GetMessageBord()  
-        // item saved
+    function GetMessageBord(Username){   
+        console.log(Username)
+        props.GetMessageBord(Username)  
         localStorage.setItem("login", true) 
     } 
 
@@ -77,7 +78,7 @@ function Login(props){
                 </div> 
                 :  
                 <div className='LoginFormItems'>   
-                    <p className='LoginHeader'>Sign Up</p> 
+                    <p className='LoginHeaderLoginHeaderSignUp'>Sign Up</p> 
                     <p className='errorMessage'>{userNameError}</p>
                     <form onSubmit={NewUser}> 
                         <p className='UserName'>Create UserName</p>

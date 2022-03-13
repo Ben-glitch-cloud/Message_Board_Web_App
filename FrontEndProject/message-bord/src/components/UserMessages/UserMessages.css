@@ -5,7 +5,11 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; 
     margin: 7.5px 0px;
     padding: 0px 7.5px;
-}  
+}   
+
+.MessageDate{
+    font-size: 12px; 
+}
 
 .buttonArea{
     display: flex; 

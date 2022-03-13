@@ -6,7 +6,8 @@ import Header from './components/Header/Header'
 import Form from './components/Form/Form' 
 import EditWindow from './components/EditWindow/EditWindow'; 
 import Login from './components/Login/Login' 
-import Filter from './components/Filter/Filter';
+import Filter from './components/Filter/Filter'; 
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {  
 
@@ -18,7 +19,15 @@ function App() {
 
   const [login, setLogin] = useState(false) 
 
-  const [userID, setUserID] = useState([])
+  const [userID, setUserID] = useState([])  
+
+  const [userName, setUserName] = useState([])  
+
+  const [userMessages, setUserMessages] = useState(0) 
+
+  const [UserProfileShow, setUserProfileShow] = useState(false)
+
+  // ['BenedictLawrence']
 
   useEffect(() => { 
     if(login) { 
@@ -32,18 +41,26 @@ function App() {
       })   
 
       axios.get('/UserConfirmation').then((res) => {  
-        console.log(res.data['_id'])
         setUserID(userID => [...userID, res.data['_id']])   
       }).catch(function (error) {
         console.log(`Error: ${error}`)
       })
     } 
   }, [login])    
+  
+  useEffect(() => {  setUserMessages(num => num = messages.filter((mes) => mes['UserIDMessage'] === userID[0]).length) }, [messages])
+
+  useEffect(() => {  
+    if(userName.length === 0){
+      const profileUserName = localStorage.getItem('Username')
+      setUserName(username => [...username, profileUserName])  
+    }
+   }, [])
 
   useEffect(() => {
     const LogedIn = localStorage.getItem('login') 
    if(LogedIn){setLogin(login => !login)}
-  }, [])
+  }, []) 
 
   function GetMessageData(e){ 
     setMessages(messages => [...messages, e]) 
@@ -75,7 +92,7 @@ function App() {
     setEditMesage([])
   } 
 
-  function ChangeEditMessage(EditedM){ 
+  function ChangeEditMessage(EditedM){  
     setEditWindow(editWindow => !editWindow) 
     setEditMesage([])    
     setMessages(message => message.filter((mes) => mes['_id'] === EditedM['ID'] ? mes['UserMessage'] = EditedM['UserMessage'] : mes))
@@ -88,17 +105,38 @@ function App() {
     console.log(EditedM)
   } 
 
-  function GetMessageBord(){ setLogin(login => !login) } 
+  // use this
+  function GetMessageBord(Username){  
+    setLogin(login => !login)  
+    localStorage.setItem('Username', Username)   
+    const profileUserName = localStorage.getItem('Username') 
+    if(userName.length === 0){
+      setUserName(username => [...username, profileUserName])  
+    }
+
+  } 
 
   function logout(){ 
     setLogin(login => !login) 
-    localStorage.removeItem('login')
-  } 
+    localStorage.removeItem('login') 
+    localStorage.removeItem('Username') 
+    setUserName(userName => userName = []) 
+  }   
+
+  function ShowUserProfile(){
+    console.log('click')  
+    setUserProfileShow(UserProfileShow => !UserProfileShow)
+    // work on the user window.
+  }
+
+  // Adding a user profile so as a user I can edit it.  
+  //
 
   if(login) {
   return ( 
     <div className="App">  
-      <Header LoggingOut={logout}/>  
+      <Header LoggingOut={logout} ShowUserProfile={ShowUserProfile}/>   
+      { UserProfileShow ? <UserProfile Username={userName} NumberOfMessages={userMessages}/> : null}
       { editWindow ? <EditWindow SetEditMessage={editMessage} GetCloseEditWindow={GetCloseEditWindow} ChangeEditMessage={ChangeEditMessage}/> : null }
       <Form GetMessageData={GetMessageData} CurrentUserID={userID[0]}/>  
       <div className='MessageCon'>

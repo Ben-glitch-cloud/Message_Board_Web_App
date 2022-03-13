@@ -9,7 +9,7 @@ function UserMessage(props){
     return(
         <div className="UserMessage">
             <p>{props.message}</p>
-            <p>{props.date}</p>  
+            <p className="MessageDate">{props.date}</p>  
             <div className='buttonArea'>
                 { props.MessageID === props.CurrentUserID ? <button className='delete' onClick={() => DeleteMessage(props.id)}>Delete</button> : null }
                 <br/>
