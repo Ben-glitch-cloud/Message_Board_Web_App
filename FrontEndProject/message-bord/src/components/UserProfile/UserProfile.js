@@ -7,7 +7,8 @@ function UserProfile(props){
             <div className='UserProfile'>
                 <h4>User Profile</h4> 
                 <p className='info'>User Name: {props.Username}</p> 
-                <p className='info'>Number of messages: {props.NumberOfMessages}</p>
+                <p className='info'>Number of messages: {props.NumberOfMessages}</p> 
+                <p className='info'>User Status: Guest</p>
             </div>
         </div>
     )

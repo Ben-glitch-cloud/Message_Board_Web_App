@@ -42,6 +42,13 @@ app.post('/EditMessage', async function(req, res) {
   res.send('--Message has been Edited--')
 })
 
+app.post('/AddLikeToMessage', async function(req, res){
+  await messageBordExpress.AddLikeToMessage(req.body)
+}) 
+
+app.post('/UnlikeToMessage', async function(req, res) {
+  await messageBordExpress.UnlikeMessage(req.body)
+})
 
 // checking user details --> look at saving user details. 
 
@@ -50,7 +57,6 @@ app.get('/CheckUserDetails', async function(req, res) {
   if(result !== null){  
     UserID['_id'] = result['_id'].toString()   
     const Verify = result['UserName'] === req.query.UserName && result['Password'] === req.query.Password  
-    // console.log({VerifyUser: Verify, UserName: result['UserName']})
     res.send({VerifyUser: Verify, UserName: result['UserName']}) 
   } else {
     res.send(false)
@@ -58,8 +64,6 @@ app.get('/CheckUserDetails', async function(req, res) {
 })
 
 app.post('/Creating/User', async function(req, res) {
-  // console.log(req.body['UserName'])  
-  // console.log(req.body['Password'])   
   const result = await messageBordedUserProfile.CheckOtherUsersNamesEx(req.body['UserName']) 
   if(result){ 
     await messageBordedUserProfile.AddNewUser(req.body['UserName'], req.body['Password'])
@@ -68,7 +72,9 @@ app.post('/Creating/User', async function(req, res) {
     res.send(false)
   }
 
-})
+}) 
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

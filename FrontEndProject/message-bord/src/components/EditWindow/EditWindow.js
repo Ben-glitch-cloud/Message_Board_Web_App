@@ -15,9 +15,9 @@ function EditWindow(props){
     } 
 
     function SubmitEditChange(e){  
-        e.preventDefault() 
-        if(!messageEdited){ return }
-        props.ChangeEditMessage({UserMessage: UserMessage, ID: ID})
+        e.preventDefault()  
+        if(!messageEdited){ return } 
+        props.ChangeEditMessage({UserMessage: UserMessage, ID: ID}) 
     }
 
     function CloseEditWindow(){ props.GetCloseEditWindow() }

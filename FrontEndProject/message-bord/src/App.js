@@ -12,22 +12,16 @@ import UserProfile from './components/UserProfile/UserProfile';
 function App() {  
 
   const [messages, setMessages] = useState([]) 
-
   const [editWindow, setEditWindow] = useState(false)  
-
-  const [editMessage, setEditMesage] = useState([]) 
-
+  const [editMessage, setEditMesage] = useState([])  
+  // set login back to false
   const [login, setLogin] = useState(false) 
-
   const [userID, setUserID] = useState([])  
-
-  const [userName, setUserName] = useState([])  
-
+  const [userName, setUserName] = useState('')  
   const [userMessages, setUserMessages] = useState(0) 
-
   const [UserProfileShow, setUserProfileShow] = useState(false)
 
-  // ['BenedictLawrence']
+  const [FirstLick, setFirstLick] = useState(false)
 
   useEffect(() => { 
     if(login) { 
@@ -53,9 +47,9 @@ function App() {
   useEffect(() => {  
     if(userName.length === 0){
       const profileUserName = localStorage.getItem('Username')
-      setUserName(username => [...username, profileUserName])  
+      setUserName(username => username = profileUserName)  
     }
-   }, [])
+   }, []) 
 
   useEffect(() => {
     const LogedIn = localStorage.getItem('login') 
@@ -66,7 +60,9 @@ function App() {
     setMessages(messages => [...messages, e]) 
     axios.post('/newMessage', {
       UserMessage: e['UserMessage'], 
-      Date: e['Date']
+      Date: e['Date'], 
+      Likes: e['Likes'], 
+      UserLiked: e['UserLiked']
     }).catch(function (error){
       console.log(`Error: ${error}`)
     })
@@ -94,7 +90,7 @@ function App() {
 
   function ChangeEditMessage(EditedM){  
     setEditWindow(editWindow => !editWindow) 
-    setEditMesage([])    
+    setEditMesage([])      
     setMessages(message => message.filter((mes) => mes['_id'] === EditedM['ID'] ? mes['UserMessage'] = EditedM['UserMessage'] : mes))
     axios.post('/EditMessage', {
       ID: EditedM['ID'], 
@@ -105,13 +101,12 @@ function App() {
     console.log(EditedM)
   } 
 
-  // use this
   function GetMessageBord(Username){  
     setLogin(login => !login)  
     localStorage.setItem('Username', Username)   
     const profileUserName = localStorage.getItem('Username') 
     if(userName.length === 0){
-      setUserName(username => [...username, profileUserName])  
+      setUserName(username =>  username = profileUserName)  
     }
 
   } 
@@ -120,17 +115,42 @@ function App() {
     setLogin(login => !login) 
     localStorage.removeItem('login') 
     localStorage.removeItem('Username') 
-    setUserName(userName => userName = []) 
-  }   
+    setUserName(userName => userName = '') 
+  }    
 
-  function ShowUserProfile(){
-    console.log('click')  
-    setUserProfileShow(UserProfileShow => !UserProfileShow)
-    // work on the user window.
+
+  function AddLikeToMesages(MessageId){   
+
+    let arrayNames = []
+    messages.map((item) => item._id === MessageId ? arrayNames.push(item['UserLiked']) : null)  
+    if(!arrayNames[0].includes(userName)){
+      setMessages(messages => messages = messages.map((item) => item._id === MessageId ? {...item, 'Likes': item.Likes + 1 } : item))   
+      setMessages(messages => messages = messages.map((item) => item._id === MessageId ? {...item, 'UserLiked': [...item.UserLiked, userName] } : item))    
+
+        axios.post('/AddLikeToMessage', {
+        MessageID: MessageId, 
+        UserName: userName
+        }).catch(function (error){
+        console.log(`Error: ${error}`)
+        })    
+
+      } else {
+        console.log('You have already liked this:)') 
+        setMessages(messages => messages = messages.map((item) => item._id === MessageId ? {...item, 'Likes': item.Likes - 1 } : item))  
+        setMessages(messages => messages = messages.map((item) => item._id === MessageId ? {...item, 'UserLiked': item.UserLiked.filter((item) => item !== userName) } : item))  
+
+        axios.post('/UnlikeToMessage', {
+          MessageID: MessageId, 
+          UserName: userName
+          }).catch(function (error){
+          console.log(`Error: ${error}`)
+          })  
+
+      }  
+
   }
 
-  // Adding a user profile so as a user I can edit it.  
-  //
+  function ShowUserProfile(){ setUserProfileShow(UserProfileShow => !UserProfileShow) }
 
   if(login) {
   return ( 
@@ -141,7 +161,7 @@ function App() {
       <Form GetMessageData={GetMessageData} CurrentUserID={userID[0]}/>  
       <div className='MessageCon'>
         {messages.map(item => {
-          return <UserMessage id={item._id} message={item.UserMessage} MessageID={item.UserIDMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage} CurrentUserID={userID[0]}/>
+          return <UserMessage id={item._id} message={item.UserMessage} MessageID={item.UserIDMessage} date={item.Date} GetMessageID={GetMessageID} GetEditMessage={GetEditMessage} CurrentUserID={userID[0]} Likes={item.Likes} AddLike={AddLikeToMesages}/>
         })}
       </div>  
     </div>

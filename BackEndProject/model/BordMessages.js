@@ -59,6 +59,31 @@ class MessageBord {
         }finally{
             client.close()
         }
+    } 
+
+   async AddLikeToMessage(MessageId){
+        try{
+            await client.connect()  
+            await client.db('UserMessages').collection('Messages').updateOne({"_id": ObjectId(MessageId['MessageID'])}, {$inc: { Likes: 1 }})    
+            await client.db('UserMessages').collection('Messages').updateOne({"_id": ObjectId(MessageId['MessageID'])}, {$push: { UserLiked: MessageId['UserName']}})
+            return true
+        }catch(e){ 
+            console.log(`Error ${e}`)
+        }finally{
+            client.close()
+        }
+    } 
+
+    async UnlikeMessage(MessageId){
+        try{
+            await client.connect() 
+            await client.db('UserMessages').collection('Messages').updateOne({"_id": ObjectId(MessageId['MessageID'])}, {$inc: { Likes: -1 }}) 
+            await client.db('UserMessages').collection('Messages').updateOne({"_id": ObjectId(MessageId['MessageID'])}, {$pull: { UserLiked: MessageId['UserName'] }})
+        }catch(e){
+            console.log(`Error ${e}`)
+        }finally{
+            client.close()
+        }
     }
 }  
 
